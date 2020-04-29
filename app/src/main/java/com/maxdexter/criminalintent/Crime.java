@@ -1,7 +1,16 @@
 package com.maxdexter.criminalintent;
 
+import android.text.format.DateFormat;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
+import java.util.logging.SimpleFormatter;
 
 public class Crime {
     private UUID mId;
@@ -48,6 +57,9 @@ public class Crime {
 
     public Crime(){
         mId = UUID.randomUUID();
+       // SimpleDateFormat df = new SimpleDateFormat("EEE, d MMM yyyy");
         mDate = new Date();
+
+
     }
 }

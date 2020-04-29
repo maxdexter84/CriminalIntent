@@ -1,9 +1,11 @@
 package com.maxdexter.criminalintent;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +44,7 @@ public class CrimeListFragment extends Fragment {
         private TextView mTitleTextView;
         private TextView mDateTextView;
         private Crime mCrime;
+        private ImageView mSolvedImageView;
 
         public CrimeHolder( View itemView) {
             super(itemView);
@@ -49,16 +52,20 @@ public class CrimeListFragment extends Fragment {
             itemView.setOnClickListener(this);
             mTitleTextView = itemView.findViewById(R.id.crime_title);
             mDateTextView = itemView.findViewById(R.id.crime_date);
+            mSolvedImageView = itemView.findViewById(R.id.crime_solved);
         }
         public void bind(Crime crime){
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
             mDateTextView.setText(mCrime.getDate().toString());
+            mSolvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE:View.GONE);
         }
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(getActivity(),mCrime.getTitle() + " clicked!",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getActivity(),CrimeActivity.class);
+            startActivity(intent);
+
         }
     }
 
@@ -81,7 +88,7 @@ public class CrimeListFragment extends Fragment {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_crime,parent,false);
 
 
-           // LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+
 
             return new CrimeHolder(view);
         }

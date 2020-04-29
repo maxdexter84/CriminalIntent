@@ -27,7 +27,7 @@ public class CrimeLab {
         for (int i = 0; i < 100; i++) {
             Crime crime = new Crime();
             crime.setTitle("Crime # " + i);
-            crime.setSolved(i % 2 == 0);
+            crime.setSolved(i % 2 != 0);
             if(i % 2 == 0){
                 crime.setRequiresPolice(1);
             }else {
