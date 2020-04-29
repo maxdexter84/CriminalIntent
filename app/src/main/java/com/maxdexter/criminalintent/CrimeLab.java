@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class CrimeLab {
+
     private static CrimeLab sCrimeLab;
     private List<Crime> mCrimes;
 
@@ -27,6 +28,11 @@ public class CrimeLab {
             Crime crime = new Crime();
             crime.setTitle("Crime # " + i);
             crime.setSolved(i % 2 == 0);
+            if(i % 2 == 0){
+                crime.setRequiresPolice(1);
+            }else {
+                crime.setRequiresPolice(0);
+            }
             mCrimes.add(crime);
         }
     }

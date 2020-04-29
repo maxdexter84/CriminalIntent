@@ -43,8 +43,9 @@ public class CrimeListFragment extends Fragment {
         private TextView mDateTextView;
         private Crime mCrime;
 
-        public CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.list_item_crime,parent,false));
+        public CrimeHolder( View itemView) {
+            super(itemView);
+            // super(inflater.inflate(R.layout.list_item_crime,parent,false));
             itemView.setOnClickListener(this);
             mTitleTextView = itemView.findViewById(R.id.crime_title);
             mDateTextView = itemView.findViewById(R.id.crime_date);
@@ -64,6 +65,8 @@ public class CrimeListFragment extends Fragment {
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder>{
         private List<Crime> mCrimes;
 
+
+
         public CrimeAdapter(List<Crime> crimes) {
             mCrimes = crimes;
         }
@@ -71,9 +74,16 @@ public class CrimeListFragment extends Fragment {
         @NonNull
         @Override
         public CrimeHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            if(viewType == 1){
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_crime_requires_police,parent,false);
+                return new CrimeHolder(view);
+            }
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_crime,parent,false);
 
-            return new CrimeHolder(layoutInflater,parent);
+
+           // LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+
+            return new CrimeHolder(view);
         }
 
         @Override
@@ -85,6 +95,15 @@ public class CrimeListFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mCrimes.size();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            Crime crime = mCrimes.get(position);
+            if(crime.isRequiresPolice() == 1){
+                return crime.isRequiresPolice();
+            }
+            return super.getItemViewType(position);
         }
     }
 }
