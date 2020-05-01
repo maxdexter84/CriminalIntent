@@ -36,8 +36,13 @@ public class CrimeListFragment extends Fragment {
     private void updateUI(){
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime>crimes = crimeLab.getCrimes();
-        mAdapter = new CrimeAdapter(crimes);
-        mCrimeRecyclerView.setAdapter(mAdapter);
+        if(mAdapter == null){
+            mAdapter = new CrimeAdapter(crimes);
+            mCrimeRecyclerView.setAdapter(mAdapter);
+        }else{
+            mAdapter.notifyDataSetChanged();
+        }
+
     }
     // реализация RecyclerView.Adapter и ViewHolder как внутреннего класса класса фрагмента
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -63,9 +68,8 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(getActivity(),CrimeActivity.class);
+            Intent intent = CrimePagerActivity.newIntent(getActivity(),mCrime.getId());
             startActivity(intent);
-
         }
     }
 
@@ -112,5 +116,11 @@ public class CrimeListFragment extends Fragment {
             }
             return super.getItemViewType(position);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI();
     }
 }
