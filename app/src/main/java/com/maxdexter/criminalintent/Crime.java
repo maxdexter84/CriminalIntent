@@ -63,8 +63,8 @@ public class Crime {
         mId = UUID.randomUUID();
        // SimpleDateFormat df = new SimpleDateFormat("EEE, d MMM yyyy");
         mDate = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        simpleDateFormat.format(mDate);
-        mTime = simpleDateFormat.format(mDate);;
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        mTime = df.format(mDate);
+
     }
 }

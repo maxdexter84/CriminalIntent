@@ -27,6 +27,7 @@ import java.util.UUID;
  */
 public class CrimeFragment extends Fragment {
     private static final int REQUEST_DATE = 0;
+    private static final int REQUEST_TIME = 1;
  private static final String ARG_CRIME_ID = "crime_id";
  private static final String DIALOG_DATE = "DialogDate";// Метка для DatePickerFragment
  private static final String DIALOG_TIME = "DialogTime";// Метка для TimePickerFragment
@@ -81,12 +82,14 @@ public class CrimeFragment extends Fragment {
             }
         });
         mTimeButton = v.findViewById(R.id.crime_time);
-        mTimeButton.setText(mCrime.getTime());
+        updateDate();
+        mTimeButton.setText(mCrime.getTime().toString());
         mTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager manager = getFragmentManager();
-                TimePickerFragment timeDialog = new TimePickerFragment();
+                TimePickerFragment timeDialog = TimePickerFragment.newInstance(mCrime.getTime());
+                timeDialog.setTargetFragment(CrimeFragment.this,REQUEST_TIME);
                 assert manager != null;
                 timeDialog.show(manager,DIALOG_TIME);
             }
@@ -114,11 +117,17 @@ public class CrimeFragment extends Fragment {
             mCrime.setDate(date);
             updateDate();
         }
+        if(requestCode == REQUEST_TIME){
+            String date = data.getStringExtra(TimePickerFragment.EXTRA_TIME);
+            mCrime.setTime(date);
+            mTimeButton.setText(mCrime.getTime());
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void updateDate() {
         mDateButton.setText(mCrime.getDate().toString());
+
     }
 
     public static CrimeFragment newInstance(UUID crimeId){
