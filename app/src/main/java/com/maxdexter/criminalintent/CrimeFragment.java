@@ -1,5 +1,7 @@
 package com.maxdexter.criminalintent;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,7 +16,9 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
+import java.util.Date;
 import java.util.UUID;
 
 
@@ -22,12 +26,17 @@ import java.util.UUID;
  * A simple {@link Fragment} subclass.
  */
 public class CrimeFragment extends Fragment {
- public static final String ARG_CRIME_ID = "crime_id";
+    private static final int REQUEST_DATE = 0;
+ private static final String ARG_CRIME_ID = "crime_id";
+ private static final String DIALOG_DATE = "DialogDate";// Метка для DatePickerFragment
+ private static final String DIALOG_TIME = "DialogTime";// Метка для TimePickerFragment
+
 
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
+    private Button mTimeButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,9 +70,27 @@ public class CrimeFragment extends Fragment {
         });
 
         mDateButton  = v.findViewById(R.id.crime_date);
-        mDateButton.setText(mCrime.getDate().toString());
-        mDateButton.setEnabled(false);
-
+        updateDate();
+        mDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getFragmentManager(); //Создаем экземпляр фрагмент менеджера
+                DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());// и экземпляр класса DatePickerFragment
+                dialog.setTargetFragment(CrimeFragment.this,REQUEST_DATE);// назначил CrimeFragment  целевым фрагментом экземплярв DatePickerFragment;
+                dialog.show(manager,DIALOG_DATE);//запуск диалогового окна при нажатии кнопки
+            }
+        });
+        mTimeButton = v.findViewById(R.id.crime_time);
+        mTimeButton.setText(mCrime.getTime());
+        mTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getFragmentManager();
+                TimePickerFragment timeDialog = new TimePickerFragment();
+                assert manager != null;
+                timeDialog.show(manager,DIALOG_TIME);
+            }
+        });
         mSolvedCheckBox = v.findViewById(R.id.crime_solved);
         mSolvedCheckBox.setChecked(mCrime.isSolved());
         mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -73,7 +100,25 @@ public class CrimeFragment extends Fragment {
             }
         });
 
+
         return v;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(resultCode != Activity.RESULT_OK){
+            return;
+        }
+        if(requestCode == REQUEST_DATE){
+            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            mCrime.setDate(date);
+            updateDate();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void updateDate() {
+        mDateButton.setText(mCrime.getDate().toString());
     }
 
     public static CrimeFragment newInstance(UUID crimeId){
