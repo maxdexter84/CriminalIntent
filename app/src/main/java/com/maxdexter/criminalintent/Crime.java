@@ -60,11 +60,13 @@ public class Crime {
     }
 
     public Crime(){
-        mId = UUID.randomUUID();
-       // SimpleDateFormat df = new SimpleDateFormat("EEE, d MMM yyyy");
+       this(UUID.randomUUID());
+
+    }
+    public Crime(UUID id){
+        mId = id;
         mDate = new Date();
         SimpleDateFormat df = new SimpleDateFormat("HH:mm", Locale.getDefault());
         mTime = df.format(mDate);
-
     }
 }
