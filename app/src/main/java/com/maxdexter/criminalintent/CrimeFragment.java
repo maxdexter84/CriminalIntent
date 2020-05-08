@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,6 +39,7 @@ public class CrimeFragment extends Fragment {
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
     private Button mTimeButton;
+    private Button mDeleteCrime;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,7 +50,7 @@ public class CrimeFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_crime,container,false);
         mTitleField = v.findViewById(R.id.crime_title);
         mTitleField.setText(mCrime.getTitle());
@@ -92,6 +94,15 @@ public class CrimeFragment extends Fragment {
                 timeDialog.setTargetFragment(CrimeFragment.this,REQUEST_TIME);
                 assert manager != null;
                 timeDialog.show(manager,DIALOG_TIME);
+            }
+        });
+        mDeleteCrime = v.findViewById(R.id.delete_crime);
+        mDeleteCrime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              CrimeLab.get(getActivity()).getCrimes().remove(mCrime);
+              getActivity().finish();
+
             }
         });
         mSolvedCheckBox = v.findViewById(R.id.crime_solved);
